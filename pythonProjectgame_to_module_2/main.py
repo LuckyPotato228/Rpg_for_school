@@ -19,6 +19,8 @@ y_tiles = screen_h // tile_wh
 
 last_keys = None
 
+stairs_up_image = pygame.image.load('Images/stone_stairs_up.png')
+stairs_down_image = pygame.image.load('Images/stone_stairs_down.png')
 wall_image = pygame.image.load('Images/wood_wall.png')
 easy_window_image = pygame.image.load('Images/wood_window.png')
 up_wall_image = pygame.image.load('Images/wood_upper_wall.png')
@@ -26,11 +28,22 @@ wall_upp_image = pygame.image.load('Images/wood_wall_upper_part.png')
 wall_lpp_image = pygame.image.load('Images/wood_wall_lower_part.png')
 floor_image = pygame.image.load('Images/wood_floor.png')
 cupboard_wbk_image = pygame.image.load('Images/cupboard_with_books.png')
+cupboard_wbt_image = pygame.image.load('Images/cupboard_with_bottles.png')
+cupboard_wc_image = pygame.image.load('Images/cupboard_with_clothes.png')
+dresser_image = pygame.image.load('Images/dresser.png')
+sw_cupboard_image = pygame.image.load('Images/side_wall_cupboard.png')
 bed_image = pygame.image.load('Images/bed.png')
+bedside_table_image = pygame.image.load('Images/bedside_table.png')
 civilian_down = pygame.image.load('Images/Civilian01.png')
 civilian_left = pygame.image.load('Images/Civilian02.png')
 civilian_right = pygame.image.load('Images/Civilian03.png')
 civilian_up = pygame.image.load('Images/Civilian04.png')
+kitchen_set_image = pygame.image.load('Images/kitchen_set.png')
+table_image = pygame.image.load('Images/table.png')
+stool_image = pygame.image.load('Images/stool.png')
+cl_amphora_image = pygame.image.load('Images/closed_amphora.png')
+op_amphora_image = pygame.image.load('Images/opened_amphora.png')
+food_on_table_image = pygame.image.load('Images/food_on_table.png')
 
 
 def image_by_name(name):
@@ -45,8 +58,36 @@ def image_by_name(name):
         image_to_draw = wall_lpp_image
     if name == 'CUPBOARD WITH BOOKS':
         image_to_draw = cupboard_wbk_image
+    if name == 'CUPBOARD WITH BOTTLES':
+        image_to_draw = cupboard_wbt_image
+    if name == 'CUPBOARD WITH CLOTHES':
+        image_to_draw = cupboard_wc_image
+    if name == 'SIDE WALL CUPBOARD':
+        image_to_draw = sw_cupboard_image
+    if name == 'DRESSER':
+        image_to_draw = dresser_image
+    if name == 'EASY WINDOW':
+        image_to_draw = easy_window_image
     if name == 'BED':
         image_to_draw = bed_image
+    if name == 'BEDSIDE TABLE':
+        image_to_draw = bedside_table_image
+    if name == 'STAIRS UP':
+        image_to_draw = stairs_up_image
+    if name == 'STAIRS DOWN':
+        image_to_draw = stairs_down_image
+    if name == 'KITCHEN SET':
+        image_to_draw = kitchen_set_image
+    if name == 'TABLE':
+        image_to_draw = table_image
+    if name == 'STOOL':
+        image_to_draw = stool_image
+    if name == 'CLOSED AMPHORA':
+        image_to_draw = cl_amphora_image
+    if name == 'OPENED AMPHORA':
+        image_to_draw = op_amphora_image
+    if name == 'FOOD ON TABLE':
+        image_to_draw = food_on_table_image
     return image_to_draw
 
 
@@ -99,15 +140,55 @@ def init_scene_second_floor():
         tiles[y_tiles - 6][x_tiles // 2].name = 'WALL UPPER PART'
         tiles[y_tiles - 5][x_tiles // 2].can_walk = False
         tiles[y_tiles - 5][x_tiles // 2].name = 'WALL LOWER PART'
+    # Stairs
+    tiles[3][1].can_walk = True
+    tiles[3][1].name = 'STAIRS DOWN'
+    tiles[3][1].step_on_text = 'Я не могу уйти, не сделав дела Х'
     # Cupboards
     tiles[2][11].can_walk = False
     decorations.append(Decoration('CUPBOARD WITH BOOKS', 11, 1.8))
+    tiles[2][12].can_walk = False
+    decorations.append(Decoration('DRESSER', 12, 1.8))
+    tiles[3][6].can_walk = False
+    decorations.append(Decoration('CUPBOARD WITH BOTTLES', 6, 2.1))
+    tiles[2][10].can_walk = False
+    decorations.append(Decoration('CUPBOARD WITH CLOTHES', 10, 1.7))
+    tiles[5][12].can_walk = False
+    tiles[6][12].can_walk = False
+    tiles[7][12].can_walk = False
+    decorations.append(Decoration('SIDE WALL CUPBOARD', 12, 5.3))
+    # kitchen set
+    tiles[3][3].can_walk = False
+    tiles[3][4].can_walk = False
+    tiles[3][5].can_walk = False
+    decorations.append(Decoration('KITCHEN SET', 3, 2.5))
     # Bed
     decorations.append(Decoration('BED', 8, 2.2))
     tiles[3][8].can_walk = False
     tiles[4][8].can_walk = False
     tiles[3][8].lookup_text = 'Я уже встал, нечего валяться.\n* Кровать заправлена, всё в порядке *'
     decorations.append(Decoration('BEDSIDE TABLE', 8, 4))
+    # Windows
+    decorations.append(Decoration('EASY WINDOW', 3, 1.25))
+    decorations.append(Decoration('EASY WINDOW', 9, 1.25))
+    # Table with food and stools
+    tiles[5][4].can_walk = False
+    decorations.append(Decoration('TABLE', 4, 5))
+    decorations.append(Decoration('FOOD ON TABLE', 4.2, 4.95))
+    decorations.append(Decoration('STOOL', 3.23, 5.3))
+    decorations.append(Decoration('STOOL', 5.23, 5.3))
+    # Amphorae
+    tiles[7][1].can_walk = False
+    tiles[7][2].can_walk = False
+    tiles[8][1].can_walk = False
+    tiles[8][2].can_walk = False
+    tiles[8][3].can_walk = False
+    decorations.append(Decoration('CLOSED AMPHORA', 1.15, 8))
+    decorations.append(Decoration('CLOSED AMPHORA', 1.15, 7))
+    decorations.append(Decoration('CLOSED AMPHORA', 2.15, 8))
+    decorations.append(Decoration('OPENED AMPHORA', 3.15, 8))
+    decorations.append(Decoration('OPENED AMPHORA', 2.15, 7))
+
 
 def exit_process():
     sys.exit(128)
