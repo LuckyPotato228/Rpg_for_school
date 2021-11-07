@@ -19,18 +19,19 @@ y_tiles = screen_h // tile_wh
 
 last_keys = None
 
-stairs_up_image = pygame.image.load('Images/stone_stairs_up.png')
-stairs_down_image = pygame.image.load('Images/stone_stairs_down.png')
 wall_image = pygame.image.load('Images/wood_wall.png')
 easy_window_image = pygame.image.load('Images/wood_window.png')
 up_wall_image = pygame.image.load('Images/wood_upper_wall.png')
 wall_upp_image = pygame.image.load('Images/wood_wall_upper_part.png')
 wall_lpp_image = pygame.image.load('Images/wood_wall_lower_part.png')
 floor_image = pygame.image.load('Images/wood_floor.png')
+cupboard_wbk_image = pygame.image.load('Images/cupboard_with_books.png')
+bed_image = pygame.image.load('Images/bed.png')
 civilian_down = pygame.image.load('Images/Civilian01.png')
 civilian_left = pygame.image.load('Images/Civilian02.png')
 civilian_right = pygame.image.load('Images/Civilian03.png')
 civilian_up = pygame.image.load('Images/Civilian04.png')
+
 
 def image_by_name(name):
     image_to_draw = floor_image
@@ -42,6 +43,10 @@ def image_by_name(name):
         image_to_draw = wall_upp_image
     if name == 'WALL LOWER PART':
         image_to_draw = wall_lpp_image
+    if name == 'CUPBOARD WITH BOOKS':
+        image_to_draw = cupboard_wbk_image
+    if name == 'BED':
+        image_to_draw = bed_image
     return image_to_draw
 
 
@@ -94,6 +99,15 @@ def init_scene_second_floor():
         tiles[y_tiles - 6][x_tiles // 2].name = 'WALL UPPER PART'
         tiles[y_tiles - 5][x_tiles // 2].can_walk = False
         tiles[y_tiles - 5][x_tiles // 2].name = 'WALL LOWER PART'
+    # Cupboards
+    tiles[2][11].can_walk = False
+    decorations.append(Decoration('CUPBOARD WITH BOOKS', 11, 1.8))
+    # Bed
+    decorations.append(Decoration('BED', 8, 2.2))
+    tiles[3][8].can_walk = False
+    tiles[4][8].can_walk = False
+    tiles[3][8].lookup_text = 'Я уже встал, нечего валяться.\n* Кровать заправлена, всё в порядке *'
+    decorations.append(Decoration('BEDSIDE TABLE', 8, 4))
 
 def exit_process():
     sys.exit(128)
@@ -242,4 +256,3 @@ btns = list()
 btns.append(Button(28, 20, 200, 50, "Exit", "exit_process"))
 init_scene_second_floor()
 main()
-
