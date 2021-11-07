@@ -10,17 +10,41 @@ text_w = screen_w - menu_w
 text_h = 312
 text_y = screen_h - text_h
 text_x = menu_w
+civ_x = 2
+civ_y = 2
+civ_dir = "DOWN"  # DOWN, UP, LEFT, RIGHT
 tile_wh = 32
 x_tiles = screen_w // tile_wh
 y_tiles = screen_h // tile_wh
 
 last_keys = None
 
+stairs_up_image = pygame.image.load('Images/stone_stairs_up.png')
+stairs_down_image = pygame.image.load('Images/stone_stairs_down.png')
 wall_image = pygame.image.load('Images/wood_wall.png')
+easy_window_image = pygame.image.load('Images/wood_window.png')
 up_wall_image = pygame.image.load('Images/wood_upper_wall.png')
 wall_upp_image = pygame.image.load('Images/wood_wall_upper_part.png')
 wall_lpp_image = pygame.image.load('Images/wood_wall_lower_part.png')
 floor_image = pygame.image.load('Images/wood_floor.png')
+cupboard_wbk_image = pygame.image.load('Images/cupboard_with_books.png')
+cupboard_wbt_image = pygame.image.load('Images/cupboard_with_bottles.png')
+cupboard_wc_image = pygame.image.load('Images/cupboard_with_clothes.png')
+dresser_image = pygame.image.load('Images/dresser.png')
+sw_cupboard_image = pygame.image.load('Images/side_wall_cupboard.png')
+bed_image = pygame.image.load('Images/bed.png')
+bedside_table_image = pygame.image.load('Images/bedside_table.png')
+civilian_down = pygame.image.load('Images/Civilian01.png')
+civilian_left = pygame.image.load('Images/Civilian02.png')
+civilian_right = pygame.image.load('Images/Civilian03.png')
+civilian_up = pygame.image.load('Images/Civilian04.png')
+kitchen_set_image = pygame.image.load('Images/kitchen_set.png')
+table_image = pygame.image.load('Images/table.png')
+stool_image = pygame.image.load('Images/stool.png')
+cl_amphora_image = pygame.image.load('Images/closed_amphora.png')
+op_amphora_image = pygame.image.load('Images/opened_amphora.png')
+food_on_table_image = pygame.image.load('Images/food_on_table.png')
+
 
 def image_by_name(name):
     image_to_draw = floor_image
@@ -32,6 +56,38 @@ def image_by_name(name):
         image_to_draw = wall_upp_image
     if name == 'WALL LOWER PART':
         image_to_draw = wall_lpp_image
+    if name == 'CUPBOARD WITH BOOKS':
+        image_to_draw = cupboard_wbk_image
+    if name == 'CUPBOARD WITH BOTTLES':
+        image_to_draw = cupboard_wbt_image
+    if name == 'CUPBOARD WITH CLOTHES':
+        image_to_draw = cupboard_wc_image
+    if name == 'SIDE WALL CUPBOARD':
+        image_to_draw = sw_cupboard_image
+    if name == 'DRESSER':
+        image_to_draw = dresser_image
+    if name == 'EASY WINDOW':
+        image_to_draw = easy_window_image
+    if name == 'BED':
+        image_to_draw = bed_image
+    if name == 'BEDSIDE TABLE':
+        image_to_draw = bedside_table_image
+    if name == 'STAIRS UP':
+        image_to_draw = stairs_up_image
+    if name == 'STAIRS DOWN':
+        image_to_draw = stairs_down_image
+    if name == 'KITCHEN SET':
+        image_to_draw = kitchen_set_image
+    if name == 'TABLE':
+        image_to_draw = table_image
+    if name == 'STOOL':
+        image_to_draw = stool_image
+    if name == 'CLOSED AMPHORA':
+        image_to_draw = cl_amphora_image
+    if name == 'OPENED AMPHORA':
+        image_to_draw = op_amphora_image
+    if name == 'FOOD ON TABLE':
+        image_to_draw = food_on_table_image
     return image_to_draw
 
 
@@ -63,26 +119,18 @@ def init_scene_second_floor():
     for x in range(x_tiles):
         for y in range(y_tiles):
             if x == 0 or x == x_tiles - 1 or y == 0 or y == y_tiles - 3:
-                tiles[y][x].can_walk = False
                 tiles[y][x].name = 'UPPER WALL'
     for x in range(1, x_tiles - 1):
-        tiles[1][x].can_walk = False
         tiles[1][x].name = 'WALL UPPER PART'
-        tiles[2][x].can_walk = False
         tiles[2][x].name = 'WALL LOWER PART'
     for x in range(x_tiles):
-        tiles[y_tiles - 2][x].can_walk = False
         tiles[y_tiles - 2][x].name = 'WALL UPPER PART'
-        tiles[y_tiles - 1][x].can_walk = False
         tiles[y_tiles - 1][x].name = 'WALL LOWER PART'
     # Wall in the middle
     for y in range(y_tiles):
         if 1 <= y < y_tiles - 6:
-            tiles[y][x_tiles // 2].can_walk = False
             tiles[y][x_tiles // 2].name = 'UPPER WALL'
-        tiles[y_tiles - 6][x_tiles // 2].can_walk = False
         tiles[y_tiles - 6][x_tiles // 2].name = 'WALL UPPER PART'
-        tiles[y_tiles - 5][x_tiles // 2].can_walk = False
         tiles[y_tiles - 5][x_tiles // 2].name = 'WALL LOWER PART'
 def exit_process():
     sys.exit(128)
@@ -167,12 +215,64 @@ def main():
             image_to_draw = image_by_name(d.name)
             screen.blit(image_to_draw,
                         pygame.Rect(x_coord, y_coord, image_to_draw.get_width(), image_to_draw.get_height()))
+        # do civilian moves
+        this_processing_time = datetime.now()
+        time_diff = (this_processing_time - prev_processing_time).total_seconds() * 1000
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_DOWN] or keys[pygame.K_SPACE]:
+            if time_diff >= 100:
+                last_keys = keys
+        # process keystrokes
+        if last_keys is not None and time_diff >= 250:
+            text_to_show = ''
+            if last_keys[pygame.K_UP]:
+                if tiles[civ_y - 1][civ_x].can_walk:
+                    civ_y -= 1
+                civ_dir = "UP"
+            elif last_keys[pygame.K_LEFT]:
+                if tiles[civ_y][civ_x - 1].can_walk:
+                    civ_x -= 1
+                civ_dir = "LEFT"
+            elif last_keys[pygame.K_RIGHT]:
+                if tiles[civ_y][civ_x + 1].can_walk:
+                    civ_x += 1
+                civ_dir = "RIGHT"
+            elif last_keys[pygame.K_DOWN]:
+                if tiles[civ_y + 1][civ_x].can_walk:
+                    civ_y += 1
+                civ_dir = "DOWN"
+            elif last_keys[pygame.K_SPACE]:
+                if civ_dir == "UP":
+                    text_to_show = tiles[civ_y-1][civ_x].lookup_text
+                elif civ_dir == "LEFT":
+                    text_to_show = tiles[civ_y][civ_x-1].lookup_text
+                elif civ_dir == "RIGHT":
+                    text_to_show = tiles[civ_y][civ_x+1].lookup_text
+                elif civ_dir == "DOWN":
+                    text_to_show = tiles[civ_x][civ_y+1].lookup_text
+            prev_processing_time = this_processing_time
+            last_keys = None
+        # render civilian
+        civ_picture = civilian_down
+        if civ_dir == "DOWN":
+            civ_picture = civilian_down
+        elif civ_dir == "UP":
+            civ_picture = civilian_up
+        elif civ_dir == "LEFT":
+            civ_picture = civilian_left
+        elif civ_dir == "RIGHT":
+            civ_picture = civilian_right
+        screen.blit(civ_picture,
+                    pygame.Rect(civ_x * tile_wh + x_offset, civ_y * tile_wh + y_offset, civilian_down.get_width(),
+                                civilian_down.get_height()))
         # update screen
         draw_text_in_rectangle(screen, font, text_to_show, text_x, text_y, text_w, text_h, (255, 255, 255), sky_blue)
         pygame.display.update()
         clock.tick(fps)
 
 
+# pygame.quit()
+# sys.exit
 
 
 btns = list()
