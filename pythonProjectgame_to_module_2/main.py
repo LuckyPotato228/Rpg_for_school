@@ -27,24 +27,10 @@ up_wall_image = pygame.image.load('Images/wood_upper_wall.png')
 wall_upp_image = pygame.image.load('Images/wood_wall_upper_part.png')
 wall_lpp_image = pygame.image.load('Images/wood_wall_lower_part.png')
 floor_image = pygame.image.load('Images/wood_floor.png')
-cupboard_wbk_image = pygame.image.load('Images/cupboard_with_books.png')
-cupboard_wbt_image = pygame.image.load('Images/cupboard_with_bottles.png')
-cupboard_wc_image = pygame.image.load('Images/cupboard_with_clothes.png')
-dresser_image = pygame.image.load('Images/dresser.png')
-sw_cupboard_image = pygame.image.load('Images/side_wall_cupboard.png')
-bed_image = pygame.image.load('Images/bed.png')
-bedside_table_image = pygame.image.load('Images/bedside_table.png')
 civilian_down = pygame.image.load('Images/Civilian01.png')
 civilian_left = pygame.image.load('Images/Civilian02.png')
 civilian_right = pygame.image.load('Images/Civilian03.png')
 civilian_up = pygame.image.load('Images/Civilian04.png')
-kitchen_set_image = pygame.image.load('Images/kitchen_set.png')
-table_image = pygame.image.load('Images/table.png')
-stool_image = pygame.image.load('Images/stool.png')
-cl_amphora_image = pygame.image.load('Images/closed_amphora.png')
-op_amphora_image = pygame.image.load('Images/opened_amphora.png')
-food_on_table_image = pygame.image.load('Images/food_on_table.png')
-
 
 def image_by_name(name):
     image_to_draw = floor_image
@@ -56,38 +42,6 @@ def image_by_name(name):
         image_to_draw = wall_upp_image
     if name == 'WALL LOWER PART':
         image_to_draw = wall_lpp_image
-    if name == 'CUPBOARD WITH BOOKS':
-        image_to_draw = cupboard_wbk_image
-    if name == 'CUPBOARD WITH BOTTLES':
-        image_to_draw = cupboard_wbt_image
-    if name == 'CUPBOARD WITH CLOTHES':
-        image_to_draw = cupboard_wc_image
-    if name == 'SIDE WALL CUPBOARD':
-        image_to_draw = sw_cupboard_image
-    if name == 'DRESSER':
-        image_to_draw = dresser_image
-    if name == 'EASY WINDOW':
-        image_to_draw = easy_window_image
-    if name == 'BED':
-        image_to_draw = bed_image
-    if name == 'BEDSIDE TABLE':
-        image_to_draw = bedside_table_image
-    if name == 'STAIRS UP':
-        image_to_draw = stairs_up_image
-    if name == 'STAIRS DOWN':
-        image_to_draw = stairs_down_image
-    if name == 'KITCHEN SET':
-        image_to_draw = kitchen_set_image
-    if name == 'TABLE':
-        image_to_draw = table_image
-    if name == 'STOOL':
-        image_to_draw = stool_image
-    if name == 'CLOSED AMPHORA':
-        image_to_draw = cl_amphora_image
-    if name == 'OPENED AMPHORA':
-        image_to_draw = op_amphora_image
-    if name == 'FOOD ON TABLE':
-        image_to_draw = food_on_table_image
     return image_to_draw
 
 
@@ -119,19 +73,28 @@ def init_scene_second_floor():
     for x in range(x_tiles):
         for y in range(y_tiles):
             if x == 0 or x == x_tiles - 1 or y == 0 or y == y_tiles - 3:
+                tiles[y][x].can_walk = False
                 tiles[y][x].name = 'UPPER WALL'
     for x in range(1, x_tiles - 1):
+        tiles[1][x].can_walk = False
         tiles[1][x].name = 'WALL UPPER PART'
+        tiles[2][x].can_walk = False
         tiles[2][x].name = 'WALL LOWER PART'
     for x in range(x_tiles):
+        tiles[y_tiles - 2][x].can_walk = False
         tiles[y_tiles - 2][x].name = 'WALL UPPER PART'
+        tiles[y_tiles - 1][x].can_walk = False
         tiles[y_tiles - 1][x].name = 'WALL LOWER PART'
     # Wall in the middle
     for y in range(y_tiles):
         if 1 <= y < y_tiles - 6:
+            tiles[y][x_tiles // 2].can_walk = False
             tiles[y][x_tiles // 2].name = 'UPPER WALL'
+        tiles[y_tiles - 6][x_tiles // 2].can_walk = False
         tiles[y_tiles - 6][x_tiles // 2].name = 'WALL UPPER PART'
+        tiles[y_tiles - 5][x_tiles // 2].can_walk = False
         tiles[y_tiles - 5][x_tiles // 2].name = 'WALL LOWER PART'
+
 def exit_process():
     sys.exit(128)
 
