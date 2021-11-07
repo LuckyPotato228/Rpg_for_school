@@ -34,6 +34,7 @@ def main():
     font = pygame.font.SysFont('Comic Sans MS', 27, True)
     buttons = list()
     screen = pygame.display.set_mode(size)
+    wall_image = pygame.image.load('Images/wood_wall.png')
     for b in btns:
         buttons.append(pygame.Rect(b.x, b.y, b.width, b.height))
     while True:
@@ -55,9 +56,14 @@ def main():
             pygame.draw.rect(screen, [0, 255, 0], button)
             ts = font.render(btns[i].caption, False, (255, 255, 255))
             screen.blit(ts, (btns[i].x, btns[i].y))
+        # draw floor
+        for x in range(256, 1920, 32):
+            for y in range(0, 768, 32):
+                screen.blit(wall_image, pygame.Rect(x, y, wall_image.get_width(), wall_image.get_height()))
         # do other
         pygame.display.update()
         clock.tick(fps)
+
 
 
 btns = list()
