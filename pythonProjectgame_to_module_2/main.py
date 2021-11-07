@@ -2,11 +2,14 @@ import pygame
 import sys
 from dataclasses import dataclass
 
+
 def process():
     sys.exit(255)
 
+
 def exit_process():
     sys.exit(128)
+
 
 @dataclass
 class Button:
@@ -17,22 +20,22 @@ class Button:
     caption: str
     procedure: str
 
+
 def main():
     global btns
     pygame.init()
     pygame.font.init()
     clock = pygame.time.Clock()
     fps = 60
-    size = [800, 600]
-    black = [135, 206, 250]
+    size = [1920, 1080]
+    sky_blue = [135, 206, 250]
+    dark_blue = [0, 0, 255]
+    black = [0, 0, 0]
     font = pygame.font.SysFont('Comic Sans MS', 27, True)
-    data = 'Exit'
-    ts = font.render(data,False,(255,255,255))
     buttons = list()
     screen = pygame.display.set_mode(size)
     for b in btns:
         buttons.append(pygame.Rect(b.x, b.y, b.width, b.height))
-    screen.fill(black)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -44,16 +47,20 @@ def main():
                         s = btns[i].procedure + "()"
                         eval(s)
         screen.fill(black)
+        pygame.draw.rect(screen, sky_blue, pygame.Rect(0, 768, 1920, 312))
+        pygame.draw.rect(screen, dark_blue, pygame.Rect(0, 0, 256, 1080))
+        # draw buttons
         for i in range(len(buttons)):
             button = buttons[i]
             pygame.draw.rect(screen, [0, 255, 0], button)
             ts = font.render(btns[i].caption, False, (255, 255, 255))
-            screen.blit( ts, (btns[i].x, btns[i].y))
+            screen.blit(ts, (btns[i].x, btns[i].y))
+        # do other
         pygame.display.update()
         clock.tick(fps)
 
 
 btns = list()
-btns.append(Button(200, 200, 500, 250, "Fine Button", "process"))
-btns.append(Button(20, 40, 100, 50, "more buttons", "exit_process"))
+btns.append(Button(28, 20, 200, 50, "Exit", "process"))
+btns.append(Button(28, 100, 200, 50, "Another Exit", "exit_process"))
 main()
