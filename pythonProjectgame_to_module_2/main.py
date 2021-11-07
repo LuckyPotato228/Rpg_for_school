@@ -242,3 +242,4 @@ btns = list()
 btns.append(Button(28, 20, 200, 50, "Exit", "exit_process"))
 init_scene_second_floor()
 main()
+
