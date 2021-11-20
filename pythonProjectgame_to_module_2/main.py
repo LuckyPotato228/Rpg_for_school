@@ -109,11 +109,11 @@ tiles = [[Tile(True, 'FLOOR', '', '') for x in range(x_tiles)] for y in range(y_
 decorations = list()
 
 
-def init_scene_second_floor():
+def init_scene_first_floor():
     global x_tiles, y_tiles
     global civ_x, civ_y
-    x_tiles = 14
-    y_tiles = 12
+    x_tiles = 36
+    y_tiles = 18
     civ_x = 2
     civ_y = 3
     for x in range(x_tiles):
@@ -131,65 +131,202 @@ def init_scene_second_floor():
         tiles[y_tiles - 2][x].name = 'WALL UPPER PART'
         tiles[y_tiles - 1][x].can_walk = False
         tiles[y_tiles - 1][x].name = 'WALL LOWER PART'
-    # Wall in the middle
+    # Walls in the middle
     for y in range(y_tiles):
-        if 1 <= y < y_tiles - 6:
-            tiles[y][x_tiles // 2].can_walk = False
-            tiles[y][x_tiles // 2].name = 'UPPER WALL'
-        tiles[y_tiles - 6][x_tiles // 2].can_walk = False
-        tiles[y_tiles - 6][x_tiles // 2].name = 'WALL UPPER PART'
-        tiles[y_tiles - 5][x_tiles // 2].can_walk = False
-        tiles[y_tiles - 5][x_tiles // 2].name = 'WALL LOWER PART'
-    # Stairs
-    tiles[3][1].can_walk = True
-    tiles[3][1].name = 'STAIRS DOWN'
-    tiles[3][1].step_on_text = 'Я не могу уйти, не сделав дела Х'
-    # Cupboards
-    tiles[2][11].can_walk = False
-    decorations.append(Decoration('CUPBOARD WITH BOOKS', 11, 1.8))
-    tiles[2][12].can_walk = False
-    decorations.append(Decoration('DRESSER', 12, 1.8))
-    tiles[3][6].can_walk = False
-    decorations.append(Decoration('CUPBOARD WITH BOTTLES', 6, 2.1))
-    tiles[2][10].can_walk = False
-    decorations.append(Decoration('CUPBOARD WITH CLOTHES', 10, 1.7))
-    tiles[5][12].can_walk = False
-    tiles[6][12].can_walk = False
+        if 1 <= y < y_tiles - 10:
+            tiles[y][x_tiles // 5].can_walk = False
+            tiles[y][x_tiles // 5].name = 'UPPER WALL'
+        tiles[y_tiles - 10][x_tiles // 5].can_walk = False
+        tiles[y_tiles - 10][x_tiles // 5].name = 'WALL UPPER PART'
+        tiles[y_tiles - 9][x_tiles // 5].can_walk = False
+        tiles[y_tiles - 9][x_tiles // 5].name = 'WALL LOWER PART'
+
+#front walls of 1st room
+    tiles[7][8].name = 'UPPER WALL'
+    tiles[7][8].can_walk = False
+    tiles[8][8].name = 'WALL UPPER PART'
+    tiles[8][8].can_walk = False
+    tiles[9][8].name = 'WALL LOWER PART'
+    tiles[9][8].can_walk = False
+    tiles[7][9].name = 'UPPER WALL'
+    tiles[7][9].can_walk = False
+    tiles[8][9].name = 'WALL UPPER PART'
+    tiles[8][9].can_walk = False
+    tiles[9][9].name = 'WALL LOWER PART'
+    tiles[9][9].can_walk = False
+    tiles[7][11].name = 'UPPER WALL'
+    tiles[7][11].can_walk = False
+    tiles[8][11].name = 'WALL UPPER PART'
+    tiles[8][11].can_walk = False
+    tiles[9][11].name = 'WALL LOWER PART'
+    tiles[9][11].can_walk = False
+    tiles[7][12].name = 'UPPER WALL'
     tiles[7][12].can_walk = False
-    decorations.append(Decoration('SIDE WALL CUPBOARD', 12, 5.3))
-    # kitchen set
-    tiles[3][3].can_walk = False
-    tiles[3][4].can_walk = False
-    tiles[3][5].can_walk = False
-    decorations.append(Decoration('KITCHEN SET', 3, 2.5))
-    # Bed
-    decorations.append(Decoration('BED', 8, 2.2))
-    tiles[3][8].can_walk = False
-    tiles[4][8].can_walk = False
-    tiles[3][8].lookup_text = 'Я уже встал, нечего валяться.\n* Кровать заправлена, всё в порядке *'
-    decorations.append(Decoration('BEDSIDE TABLE', 8, 4))
-    # Windows
-    decorations.append(Decoration('EASY WINDOW', 3, 1.25))
-    decorations.append(Decoration('EASY WINDOW', 9, 1.25))
-    # Table with food and stools
-    tiles[5][4].can_walk = False
-    decorations.append(Decoration('TABLE', 4, 5))
-    decorations.append(Decoration('FOOD ON TABLE', 4.2, 4.95))
-    decorations.append(Decoration('STOOL', 3.23, 5.3))
-    decorations.append(Decoration('STOOL', 5.23, 5.3))
-    # Amphorae
-    tiles[7][1].can_walk = False
-    tiles[7][2].can_walk = False
-    tiles[8][1].can_walk = False
-    tiles[8][2].can_walk = False
-    tiles[8][3].can_walk = False
-    decorations.append(Decoration('CLOSED AMPHORA', 1.15, 8))
-    decorations.append(Decoration('CLOSED AMPHORA', 1.15, 7))
-    decorations.append(Decoration('CLOSED AMPHORA', 2.15, 8))
-    decorations.append(Decoration('OPENED AMPHORA', 3.15, 8))
-    decorations.append(Decoration('OPENED AMPHORA', 2.15, 7))
+    tiles[8][12].name = 'WALL UPPER PART'
+    tiles[8][12].can_walk = False
+    tiles[9][12].name = 'WALL LOWER PART'
+    tiles[9][12].can_walk = False
+
+    #1st room
+    tiles[1][13].name = 'UPPER WALL'
+    tiles[1][13].can_walk = False
+    tiles[2][13].name = 'UPPER WALL'
+    tiles[2][13].can_walk = False
+    tiles[3][13].name = 'UPPER WALL'
+    tiles[3][13].can_walk = False
+    tiles[4][13].name = 'UPPER WALL'
+    tiles[4][13].can_walk = False
+    tiles[5][13].name = 'UPPER WALL'
+    tiles[5][13].can_walk = False
+    tiles[6][13].name = 'UPPER WALL'
+    tiles[6][13].can_walk = False
+    tiles[7][13].name = 'UPPER WALL'
+    tiles[7][13].can_walk = False
+    tiles[8][13].name = 'WALL UPPER PART'
+    tiles[8][13].can_walk = False
+    tiles[9][13].name = 'WALL LOWER PART'
+    tiles[9][13].can_walk = False
+
+# front walls of 2nd room
+    tiles[7][14].name = 'UPPER WALL'
+    tiles[7][14].can_walk = False
+    tiles[8][14].name = 'WALL UPPER PART'
+    tiles[8][14].can_walk = False
+    tiles[9][14].name = 'WALL LOWER PART'
+    tiles[9][14].can_walk = False
+    tiles[8][15].name = 'WALL UPPER PART'
+    tiles[8][15].can_walk = False
+    tiles[9][15].name = 'WALL LOWER PART'
+    tiles[9][15].can_walk = False
+    tiles[7][15].name = 'UPPER WALL'
+    tiles[7][15].can_walk = False
+    tiles[7][17].name = 'UPPER WALL'
+    tiles[7][17].can_walk = False
+    tiles[8][17].name = 'WALL UPPER PART'
+    tiles[8][17].can_walk = False
+    tiles[9][17].name = 'WALL LOWER PART'
+    tiles[9][17].can_walk = False
+    tiles[7][18].name = 'UPPER WALL'
+    tiles[7][18].can_walk = False
+    tiles[8][18].name = 'WALL UPPER PART'
+    tiles[8][18].can_walk = False
+    tiles[9][18].name = 'WALL LOWER PART'
+    tiles[9][18].can_walk = False
 
 
+# 2nd room
+    tiles[1][19].name = 'UPPER WALL'
+    tiles[1][19].can_walk = False
+    tiles[2][19].name = 'UPPER WALL'
+    tiles[2][19].can_walk = False
+    tiles[3][19].name = 'UPPER WALL'
+    tiles[3][19].can_walk = False
+    tiles[4][19].name = 'UPPER WALL'
+    tiles[4][19].can_walk = False
+    tiles[5][19].name = 'UPPER WALL'
+    tiles[5][19].can_walk = False
+    tiles[6][19].name = 'UPPER WALL'
+    tiles[6][19].can_walk = False
+    tiles[7][19].name = 'UPPER WALL'
+    tiles[7][19].can_walk = False
+    tiles[8][19].name = 'WALL UPPER PART'
+    tiles[8][19].can_walk = False
+    tiles[9][19].name = 'WALL LOWER PART'
+    tiles[9][19].can_walk = False
+# front walls of the 3rd room
+    tiles[7][20].name = 'UPPER WALL'
+    tiles[7][20].can_walk = False
+    tiles[8][20].name = 'WALL UPPER PART'
+    tiles[8][20].can_walk = False
+    tiles[9][20].name = 'WALL LOWER PART'
+    tiles[9][20].can_walk = False
+    tiles[7][21].name = 'UPPER WALL'
+    tiles[7][21].can_walk = False
+    tiles[8][21].name = 'WALL UPPER PART'
+    tiles[8][21].can_walk = False
+    tiles[9][21].name = 'WALL LOWER PART'
+    tiles[9][21].can_walk = False
+    tiles[7][23].name = 'UPPER WALL'
+    tiles[7][23].can_walk = False
+    tiles[8][23].name = 'WALL UPPER PART'
+    tiles[8][23].can_walk = False
+    tiles[9][23].name = 'WALL LOWER PART'
+    tiles[9][23].can_walk = False
+    tiles[7][24].name = 'UPPER WALL'
+    tiles[7][24].can_walk = False
+    tiles[8][24].name = 'WALL UPPER PART'
+    tiles[8][24].can_walk = False
+    tiles[9][24].name = 'WALL LOWER PART'
+    tiles[9][24].can_walk = False
+
+# 3rd room
+    tiles[1][25].name = 'UPPER WALL'
+    tiles[1][25].can_walk = False
+    tiles[2][25].name = 'UPPER WALL'
+    tiles[2][25].can_walk = False
+    tiles[3][25].name = 'UPPER WALL'
+    tiles[3][25].can_walk = False
+    tiles[4][25].name = 'UPPER WALL'
+    tiles[4][25].can_walk = False
+    tiles[5][25].name = 'UPPER WALL'
+    tiles[5][25].can_walk = False
+    tiles[6][25].name = 'UPPER WALL'
+    tiles[6][25].can_walk = False
+    tiles[7][25].name = 'UPPER WALL'
+    tiles[7][25].can_walk = False
+    tiles[8][25].name = 'WALL UPPER PART'
+    tiles[8][25].can_walk = False
+    tiles[9][25].name = 'WALL LOWER PART'
+    tiles[9][25].can_walk = False
+# front walls of the 4th room
+    tiles[7][26].name = 'UPPER WALL'
+    tiles[7][26].can_walk = False
+    tiles[8][26].name = 'WALL UPPER PART'
+    tiles[8][26].can_walk = False
+    tiles[9][26].name = 'WALL LOWER PART'
+    tiles[9][26].can_walk = False
+    tiles[7][27].name = 'UPPER WALL'
+    tiles[7][27].can_walk = False
+    tiles[8][27].name = 'WALL UPPER PART'
+    tiles[8][27].can_walk = False
+    tiles[9][27].name = 'WALL LOWER PART'
+    tiles[9][27].can_walk = False
+    tiles[7][28].name = 'UPPER WALL'
+    tiles[7][28].can_walk = False
+    tiles[8][28].name = 'WALL UPPER PART'
+    tiles[8][28].can_walk = False
+    tiles[9][28].name = 'WALL LOWER PART'
+    tiles[9][28].can_walk = False
+    tiles[7][29].name = 'UPPER WALL'
+    tiles[7][29].can_walk = False
+    tiles[8][29].name = 'WALL UPPER PART'
+    tiles[8][29].can_walk = False
+    tiles[9][29].name = 'WALL LOWER PART'
+    tiles[9][29].can_walk = False
+    tiles[7][30].name = 'UPPER WALL'
+    tiles[7][30].can_walk = False
+    tiles[8][30].name = 'WALL UPPER PART'
+    tiles[8][30].can_walk = False
+    tiles[9][30].name = 'WALL LOWER PART'
+    tiles[9][30].can_walk = False
+    tiles[7][31].name = 'UPPER WALL'
+    tiles[7][31].can_walk = False
+    tiles[8][31].name = 'WALL UPPER PART'
+    tiles[8][31].can_walk = False
+    tiles[9][31].name = 'WALL LOWER PART'
+    tiles[9][31].can_walk = False
+    tiles[7][33].name = 'UPPER WALL'
+    tiles[7][33].can_walk = False
+    tiles[8][33].name = 'WALL UPPER PART'
+    tiles[8][33].can_walk = False
+    tiles[9][33].name = 'WALL LOWER PART'
+    tiles[9][33].can_walk = False
+    tiles[7][34].name = 'UPPER WALL'
+    tiles[7][34].can_walk = False
+    tiles[8][34].name = 'WALL UPPER PART'
+    tiles[8][34].can_walk = False
+    tiles[9][34].name = 'WALL LOWER PART'
+    tiles[9][34].can_walk = False
 def exit_process():
     sys.exit(128)
 
@@ -335,5 +472,5 @@ def main():
 
 btns = list()
 btns.append(Button(28, 20, 200, 50, "Exit", "exit_process"))
-init_scene_second_floor()
+init_scene_first_floor()
 main()
