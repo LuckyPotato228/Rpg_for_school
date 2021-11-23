@@ -44,7 +44,9 @@ stool_image = pygame.image.load('Images/stool.png')
 cl_amphora_image = pygame.image.load('Images/closed_amphora.png')
 op_amphora_image = pygame.image.load('Images/opened_amphora.png')
 food_on_table_image = pygame.image.load('Images/food_on_table.png')
-
+iron_door_image = pygame.image.load('Images/iron_door.png')
+blocked_exit_image = pygame.image.load('Images/blocked_exit.png')
+stone_floor_image = pygame.image.load('Images/stone_floor(1).png')
 
 def image_by_name(name):
     image_to_draw = floor_image
@@ -88,6 +90,12 @@ def image_by_name(name):
         image_to_draw = op_amphora_image
     if name == 'FOOD ON TABLE':
         image_to_draw = food_on_table_image
+    if name == 'IRON DOOR':
+        image_to_draw = iron_door_image
+    if name == 'BLOCKED EXIT':
+        image_to_draw = blocked_exit_image
+    if name == "STONE FLOOR":
+        image_to_draw = stone_floor_image
     return image_to_draw
 
 
@@ -140,6 +148,12 @@ def init_scene_first_floor():
         tiles[y_tiles - 10][x_tiles // 5].name = 'WALL UPPER PART'
         tiles[y_tiles - 9][x_tiles // 5].can_walk = False
         tiles[y_tiles - 9][x_tiles // 5].name = 'WALL LOWER PART'
+#floor of the basement entrance room
+    for x in range(26,x_tiles-1):
+        for y in range(3,y_tiles-10):
+            tiles[y][x].name = 'STONE FLOOR'
+    tiles[7][33].name = 'STONE FLOOR'
+    tiles[8][32].name = 'STONE FLOOR'
 
 #front walls of 1st room
     tiles[7][8].name = 'UPPER WALL'
@@ -327,6 +341,42 @@ def init_scene_first_floor():
     tiles[8][34].can_walk = False
     tiles[9][34].name = 'WALL LOWER PART'
     tiles[9][34].can_walk = False
+
+    decorations.append(Decoration('STAIRS UP', 2, 2.1))
+    decorations.append(Decoration('STAIRS DOWN', 34, 3))
+#Iron doors
+
+    decorations.append(Decoration('IRON DOOR', 10, 8))
+    tiles[8][10].can_walk = False
+    decorations.append(Decoration('IRON DOOR', 16, 8))
+    tiles[8][16].can_walk = False
+    decorations.append(Decoration('IRON DOOR', 22, 8))
+    tiles[8][22].can_walk = False
+    decorations.append(Decoration('IRON DOOR', 32, 8))
+    tiles[8][32].can_walk = False
+
+    decorations.append(Decoration('', 2, 15))
+    decorations.append(Decoration('BLOCKED EXIT', 2, 15))
+    decorations.append(Decoration('', 2, 16))
+    decorations.append(Decoration('', 2, 17))
+    decorations.append(Decoration('BLOCKED EXIT', 2, 16))
+    decorations.append(Decoration('', 2, 17))
+    tiles[17][2].can_walk = False
+
+#rooms furniture
+    decorations.append(Decoration('BED', 12, 2))
+    decorations.append(Decoration('BED', 18, 2))
+
+    decorations.append(Decoration('BEDSIDE TABLE', 11, 2))
+    decorations.append(Decoration('CUPBOARD WITH BOTTLES', 8, 1.5))
+    decorations.append(Decoration('CUPBOARD WITH BOOKS', 15, 1.5))
+    decorations.append(Decoration('SIDE WALL CUPBOARD', 18, 4))
+    decorations.append(Decoration('DRESSER', 14, 1.5))
+    decorations.append(Decoration('EASY WINDOW', 10, 1.5))
+    for x in range(20,25):
+        for y in range(3,7):
+            decorations.append(Decoration('CLOSED AMPHORA', x, y))
+
 def exit_process():
     sys.exit(128)
 
