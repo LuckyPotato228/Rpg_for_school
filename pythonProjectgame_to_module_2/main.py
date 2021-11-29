@@ -46,6 +46,10 @@ op_amphora_image = pygame.image.load('Images/opened_amphora.png')
 food_on_table_image = pygame.image.load('Images/food_on_table.png')
 
 
+def exit_process():
+    sys.exit(128)
+
+
 def image_by_name(name):
     image_to_draw = floor_image
     if name == 'WALL':
@@ -92,21 +96,149 @@ def image_by_name(name):
 
 
 @dataclass()
+class Button:
+    x: int
+    y: int
+    width: int
+    height: int
+    caption: str
+    procedure: str
+
+
+@dataclass()
+class Event:
+    name: str
+    state: bool
+    processor: str
+    counter: int
+
+
+@dataclass()
 class Tile:
     can_walk: bool
     name: str
+    id: str
     step_on_text: str
     lookup_text: str
+    lookup_event: str
+
 
 @dataclass()
 class Decoration:
     name: str
+    id: str
     x: float
     y: float
 
 
-tiles = [[Tile(True, 'FLOOR', '', '') for x in range(x_tiles)] for y in range(y_tiles)]
+tiles = [[Tile(True, 'FLOOR', '', '', '', '') for x in range(x_tiles)] for y in range(y_tiles)]
 decorations = list()
+events = list()
+
+
+def remove_decoration(decoration_id:str):
+    for i in range(len(decorations)):
+        if decorations[i].id == decoration_id:
+            del decorations[i]
+            return
+
+
+def set_tile_text_by_id(tile_id: str, text: str):
+    for iy in range(len(tiles)):
+        for ix in range(len(tiles[iy])):
+            if tiles[iy][ix].id == tile_id:
+                tiles[iy][ix].lookup_text = text
+
+
+def get_event_state_by_name(name: str) -> bool:
+    for e in events:
+        if e.name == name:
+            return e.state
+    return False
+
+
+def opening_amphora(e: Event):
+    e.counter += 1
+    for i in range(len(decorations)):
+        if decorations[i].id == 'CA1' and e.counter == 2:
+            # cast event on decoration
+            decorations[i].name = 'OPENED AMPHORA'
+            # change tile text, if necessary
+            set_tile_text_by_id('CA1', 'Я взял из амфоры нужные продукты. Пора готовить затрак.')
+            e.state = True
+            return
+
+
+def breakfast_on_table(e: Event):
+    if not get_event_state_by_name('MAKING BREAKFAST'):
+        return
+    e.counter += 1
+    for i in range(len(decorations)):
+        if decorations[i].id == 'TB1' and e.counter < 2:
+            remove_decoration('FT1')
+            decorations.append(Decoration('FOOD ON TABLE', 'FT1', 4.2, 4.85))
+            set_tile_text_by_id('TB1', 'Завтрак на столе, можно есть!')
+            set_tile_text_by_id('KS1', 'Завтрак на столе.')
+            tiles[5][4].lookup_event = 'HAVING BREAKFAST'
+            e.state = True
+            return
+
+
+def have_breakfast(e: Event):
+    if not get_event_state_by_name('BREAKFAST ON TABLE'):
+        return
+    e.counter += 1
+    for i in range(len(decorations)):
+        if decorations[i].id == 'TB1' and e.counter < 2:
+            remove_decoration('FT1')
+            set_tile_text_by_id('TB1', 'Я съел завтрак, можно спускаться вниз.')
+            set_tile_text_by_id('KS1', 'Я уже сготовил и съел завтрак.')
+            e.state = True
+            return
+
+
+def make_breakfast(e: Event):
+    if not get_event_state_by_name('OPENING AMPHORA'):
+        return
+    if get_event_state_by_name('BREAKFAST ON TABLE'):
+        return
+    e.counter += 1
+    for i in range(len(decorations)):
+        if decorations[i].id == 'KS1' and e.counter < 2:
+            decorations.append(Decoration('FOOD ON TABLE', 'FT1', 4.2, 2.55))
+            set_tile_text_by_id('KS1', 'Завтрак готов, нужно лишь отнести его на стол.')
+            e.state = True
+
+
+def make_the_bed(e: Event):
+    e.counter += 1
+    for i in range(len(decorations)):
+        if decorations[i].id == 'BD1' and e.counter == 2:
+            e.state = True
+            set_tile_text_by_id('BD1', 'Кровать опрятно заправлена.')
+
+
+def execute_event_by_name(name):
+    for i in range(len(events)):
+        if name == events[i].name:
+            prc = events[i].processor + "(events[" + str(i) + "])"
+            eval(prc)
+
+
+def event_by_tile(tile: Tile):
+    execute_event_by_name(tile.lookup_event)
+    return tile.lookup_text
+
+
+'''def dialog(screen, font, text_to_show, dialog_x, dialog_y, dialog_w, dialog_h, rect_color):
+    draw_text_in_rectangle(screen, font, text_to_show, dialog_x, dialog_y, dialog_w, dialog_h, (255, 255, 255),
+                           rect_color)
+    while True:
+        if pygame.key.get_pressed() == pygame.K_LEFT:
+            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(600, 900, 150, 150))
+        if pygame.key.get_pressed() == pygame.K_RIGHT:
+            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(800, 900, 150, 150))
+'''
 
 
 def init_scene_second_floor():
@@ -143,77 +275,87 @@ def init_scene_second_floor():
     # Stairs
     tiles[3][1].can_walk = True
     tiles[3][1].name = 'STAIRS DOWN'
-    tiles[3][1].step_on_text = 'Я не могу уйти, не сделав дела Х'
+    tiles[3][1].step_on_text = 'Я не могу уйти, не позавтракав и не заправив кровать.'
+    tiles[3][1].lookup_text = 'Эта лестница ведёт на первый этаж. Надо туда спуститься.'
     # Cupboards
     tiles[2][11].can_walk = False
-    decorations.append(Decoration('CUPBOARD WITH BOOKS', 11, 1.8))
+    tiles[2][11].lookup_text = "Шкаф с книгами. Они все хорошие, но сейчас надо идти завтракать."
+    decorations.append(Decoration('CUPBOARD WITH BOOKS', 'CB1', 11, 1.8))
     tiles[2][12].can_walk = False
-    decorations.append(Decoration('DRESSER', 12, 1.8))
+    tiles[2][12].lookup_text = "Я уже оделся, мне тут ничего не нужно."
+    decorations.append(Decoration('DRESSER', 'DR1', 12, 1.8))
     tiles[3][6].can_walk = False
-    decorations.append(Decoration('CUPBOARD WITH BOTTLES', 6, 2.1))
+    decorations.append(Decoration('CUPBOARD WITH BOTTLES', 'CB4', 6, 2.1))
     tiles[2][10].can_walk = False
-    decorations.append(Decoration('CUPBOARD WITH CLOTHES', 10, 1.7))
+    tiles[2][10].lookup_text = "Я уже оделся, мне тут ничего не нужно."
+    decorations.append(Decoration('CUPBOARD WITH CLOTHES', 'CB2', 10, 1.7))
     tiles[5][12].can_walk = False
     tiles[6][12].can_walk = False
     tiles[7][12].can_walk = False
-    decorations.append(Decoration('SIDE WALL CUPBOARD', 12, 5.3))
+    decorations.append(Decoration('SIDE WALL CUPBOARD', 'CB3', 12, 5.3))
     # kitchen set
     tiles[3][3].can_walk = False
+    tiles[3][3].lookup_text = ''
     tiles[3][4].can_walk = False
+    tiles[3][4].lookup_text = 'Здесь я буду готовить завтрак. Надо только взять продуктов.'
     tiles[3][5].can_walk = False
-    decorations.append(Decoration('KITCHEN SET', 3, 2.5))
+    tiles[3][5].lookup_text = ''
+    decorations.append(Decoration('KITCHEN SET', 'KS1', 3, 2.5))
     # Bed
-    decorations.append(Decoration('BED', 8, 2.2))
+    decorations.append(Decoration('BED', 'BD1', 8, 2.2))
     tiles[3][8].can_walk = False
     tiles[4][8].can_walk = False
-    tiles[3][8].lookup_text = 'Я уже встал, нечего валяться.\n* Кровать заправлена, всё в порядке *'
-    decorations.append(Decoration('BEDSIDE TABLE', 8, 4))
+    tiles[3][8].lookup_text = 'Я уже встал, нечего валяться.\n* По кровати разбросаны вещи, её нужно заправить. *'
+    decorations.append(Decoration('BEDSIDE TABLE', 'BT1', 8, 4))
     # Windows
-    decorations.append(Decoration('EASY WINDOW', 3, 1.25))
-    decorations.append(Decoration('EASY WINDOW', 9, 1.25))
+    decorations.append(Decoration('EASY WINDOW', 'EW1', 3, 1.25))
+    decorations.append(Decoration('EASY WINDOW', 'EW2', 9, 1.25))
+    tiles[2][9].lookup_text = 'За окном туман, ничего не видно'
     # Table with food and stools
     tiles[5][4].can_walk = False
-    decorations.append(Decoration('TABLE', 4, 5))
-    decorations.append(Decoration('FOOD ON TABLE', 4.2, 4.95))
-    decorations.append(Decoration('STOOL', 3.23, 5.3))
-    decorations.append(Decoration('STOOL', 5.23, 5.3))
+    decorations.append(Decoration('TABLE', 'TB1', 4, 5))
+    decorations.append(Decoration('STOOL', 'ST1', 3.23, 5.3))
+    decorations.append(Decoration('STOOL', 'ST2', 5.23, 5.3))
     # Amphorae
     tiles[7][1].can_walk = False
     tiles[7][2].can_walk = False
     tiles[8][1].can_walk = False
     tiles[8][2].can_walk = False
     tiles[8][3].can_walk = False
-    decorations.append(Decoration('CLOSED AMPHORA', 1.15, 8))
-    decorations.append(Decoration('CLOSED AMPHORA', 1.15, 7))
-    decorations.append(Decoration('CLOSED AMPHORA', 2.15, 8))
-    decorations.append(Decoration('OPENED AMPHORA', 3.15, 8))
-    decorations.append(Decoration('OPENED AMPHORA', 2.15, 7))
+    decorations.append(Decoration('CLOSED AMPHORA', 'CA1', 1.15, 7))
+    tiles[7][1].lookup_text = 'В этой амфоре есть продукты. Если я хочу позавтракать, нужно её открыть.'
+    decorations.append(Decoration('CLOSED AMPHORA', 'CA2', 1.15, 8))
+    decorations.append(Decoration('CLOSED AMPHORA', 'CA3', 2.15, 8))
+    decorations.append(Decoration('OPENED AMPHORA', 'OA4', 3.15, 8))
+    decorations.append(Decoration('OPENED AMPHORA', 'OA5', 2.15, 7))
+    # Events in scene
+    events.append(Event('OPENING AMPHORA', False, 'opening_amphora', 0))
+    tiles[7][1].lookup_event = 'OPENING AMPHORA'
+    tiles[7][1].id = 'CA1'
+    events.append(Event('MAKING THE BED', False, 'make_the_bed', 0))
+    tiles[3][8].lookup_event = 'MAKING THE BED'
+    tiles[3][8].id = 'BD1'
+    events.append(Event('MAKING BREAKFAST', False, 'make_breakfast', 0))
+    tiles[3][4].lookup_event = 'MAKING BREAKFAST'
+    tiles[3][4].id = 'KS1'
+    events.append(Event('BREAKFAST ON TABLE', False, 'breakfast_on_table', 0))
+    tiles[5][4].lookup_event = 'BREAKFAST ON TABLE'
+    tiles[5][4].id = 'TB1'
+    events.append(Event('HAVING BREAKFAST', False, 'have_breakfast', 0))
 
 
-def exit_process():
-    sys.exit(128)
-
-
-@dataclass()
-class Button:
-    x: int
-    y: int
-    width: int
-    height: int
-    caption: str
-    procedure: str
-
-
-def draw_text_in_rectangle(screen, font, text, x, y, w, h, text_col, rect_col):
+def draw_text_in_rectangle(screen, font, text, x, y, w, h, text_color, rect_color):
+    # split text0
+    lines = text.split("\n")
     # draw rectangle
-    pygame.draw.rect(screen, rect_col, pygame.Rect(x, y, w, h))
-    text_width, text_height = font.size(text)
-    ts = font.render(text, False, text_col)
-    screen.blit(ts, (text_x, text_y))
+    pygame.draw.rect(screen, rect_color, pygame.Rect(x, y, w, h))
+    for i in range(len(lines)):
+        text_width, text_height = font.size(lines[i])
+        ts = font.render(lines[i], False, text_color)
+        screen.blit(ts, (text_x + 20, text_y + text_height * i))
 
 
 def main():
-    global btns
     global civ_x, civ_y, civ_dir
     global last_keys
     text_to_show = ''
@@ -221,6 +363,8 @@ def main():
     pygame.font.init()
     clock = pygame.time.Clock()
     prev_processing_time = datetime.now()
+    btns = list()
+    btns.append(Button(28, 20, 200, 50, "Exit", "exit_process"))
     fps = 60
     size = [screen_w, screen_h]
     sky_blue = [135, 206, 250]
@@ -262,7 +406,6 @@ def main():
             for y in range(y_tiles):
                 x_coord = x * tile_wh + x_offset
                 y_coord = y * tile_wh + y_offset
-                image_to_draw = floor_image
                 image_to_draw = image_by_name(tiles[y][x].name)
                 screen.blit(image_to_draw,
                             pygame.Rect(x_coord, y_coord, image_to_draw.get_width(), image_to_draw.get_height()))
@@ -277,7 +420,8 @@ def main():
         this_processing_time = datetime.now()
         time_diff = (this_processing_time - prev_processing_time).total_seconds() * 1000
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_DOWN] or keys[pygame.K_SPACE]:
+        if keys[pygame.K_UP] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_DOWN] or keys[
+            pygame.K_RETURN]:
             if time_diff >= 100:
                 last_keys = keys
         # process keystrokes
@@ -299,15 +443,15 @@ def main():
                 if tiles[civ_y + 1][civ_x].can_walk:
                     civ_y += 1
                 civ_dir = "DOWN"
-            elif last_keys[pygame.K_SPACE]:
+            elif last_keys[pygame.K_RETURN]:
                 if civ_dir == "UP":
-                    text_to_show = tiles[civ_y-1][civ_x].lookup_text
+                    text_to_show = event_by_tile(tiles[civ_y - 1][civ_x])
                 elif civ_dir == "LEFT":
-                    text_to_show = tiles[civ_y][civ_x-1].lookup_text
+                    text_to_show = event_by_tile(tiles[civ_y][civ_x - 1])
                 elif civ_dir == "RIGHT":
-                    text_to_show = tiles[civ_y][civ_x+1].lookup_text
+                    text_to_show = event_by_tile(tiles[civ_y][civ_x + 1])
                 elif civ_dir == "DOWN":
-                    text_to_show = tiles[civ_x][civ_y+1].lookup_text
+                    text_to_show = event_by_tile(tiles[civ_y + 1][civ_x])
             prev_processing_time = this_processing_time
             last_keys = None
         # render civilian
@@ -329,11 +473,5 @@ def main():
         clock.tick(fps)
 
 
-# pygame.quit()
-# sys.exit
-
-
-btns = list()
-btns.append(Button(28, 20, 200, 50, "Exit", "exit_process"))
 init_scene_second_floor()
 main()
