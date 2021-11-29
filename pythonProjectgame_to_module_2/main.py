@@ -47,7 +47,18 @@ food_on_table_image = pygame.image.load('Images/food_on_table.png')
 iron_door_image = pygame.image.load('Images/iron_door.png')
 blocked_exit_image = pygame.image.load('Images/blocked_exit.png')
 stone_floor_image = pygame.image.load('Images/stone_floor(1).png')
-
+paint_1_image = pygame.image.load('Images/paint_1.png')
+paint_2_image = pygame.image.load('Images/paint_2.png')
+paint_3_image = pygame.image.load('Images/paint_3.png')
+paint_4_image = pygame.image.load('Images/paint_4.png')
+paint_5_image = pygame.image.load('Images/paint_5.png')
+paint_6_image = pygame.image.load('Images/paint_6.png')
+shield_image = pygame.image.load('Images/shield.png')
+stone_column_image = pygame.image.load('Images/stone_column.png')
+swords_image = pygame.image.load('Images/swords.png')
+big_clock_image = pygame.image.load('Images/big_clock.png')
+crossed_swords_image = pygame.image.load('Images/crossed_swords.png')
+mirror_image = pygame.image.load('Images/mirror.png')
 def image_by_name(name):
     image_to_draw = floor_image
     if name == 'WALL':
@@ -96,6 +107,30 @@ def image_by_name(name):
         image_to_draw = blocked_exit_image
     if name == "STONE FLOOR":
         image_to_draw = stone_floor_image
+    if name == "PAINT 1":
+        image_to_draw = paint_1_image
+    if name == "PAINT 2":
+        image_to_draw = paint_2_image
+    if name == "PAINT 3":
+        image_to_draw = paint_3_image
+    if name == "PAINT 4":
+        image_to_draw = paint_4_image
+    if name == "PAINT 5":
+        image_to_draw = paint_5_image
+    if name == "PAINT 6":
+        image_to_draw = paint_6_image
+    if name == "SHIELD":
+        image_to_draw = shield_image
+    if name == "STONE COLUMN":
+        image_to_draw = stone_column_image
+    if name == "SWORDS":
+        image_to_draw = swords_image
+    if name == "BIG CLOCK":
+        image_to_draw = big_clock_image
+    if name == "CROSSED SWORDS":
+        image_to_draw = crossed_swords_image
+    if name == "MIRROR":
+        image_to_draw = mirror_image
     return image_to_draw
 
 
@@ -344,7 +379,7 @@ def init_scene_first_floor():
 
     decorations.append(Decoration('STAIRS UP', 2, 2.1))
     decorations.append(Decoration('STAIRS DOWN', 34, 3))
-#Iron doors
+    #Iron doors
 
     decorations.append(Decoration('IRON DOOR', 10, 8))
     tiles[8][10].can_walk = False
@@ -362,17 +397,40 @@ def init_scene_first_floor():
     decorations.append(Decoration('BLOCKED EXIT', 2, 16))
     decorations.append(Decoration('', 2, 17))
     tiles[17][2].can_walk = False
-
+# basement entrance room
+    decorations.append(Decoration('STONE COLUMN', 27,3))
+    decorations.append(Decoration('STONE COLUMN', 27, 5))
+    decorations.append(Decoration('STONE COLUMN', 29, 3))
+    decorations.append(Decoration('STONE COLUMN', 29, 5))
+    decorations.append(Decoration('STONE COLUMN', 31, 3))
+    decorations.append(Decoration('STONE COLUMN', 31, 5))
+    decorations.append(Decoration('MIRROR', 27, 1.5))
+    decorations.append(Decoration('SWORDS', 32, 1.3))
+    decorations.append(Decoration('SHIELD', 32.15, 2))
 #rooms furniture
     decorations.append(Decoration('BED', 12, 2))
     decorations.append(Decoration('BED', 18, 2))
-
+    decorations.append(Decoration('CROSSED SWORDS', 16.7, 1.7))
     decorations.append(Decoration('BEDSIDE TABLE', 11, 2))
     decorations.append(Decoration('CUPBOARD WITH BOTTLES', 8, 1.5))
     decorations.append(Decoration('CUPBOARD WITH BOOKS', 15, 1.5))
+    decorations.append(Decoration('CUPBOARD WITH CLOTHES', 9, 1.5))
     decorations.append(Decoration('SIDE WALL CUPBOARD', 18, 4))
     decorations.append(Decoration('DRESSER', 14, 1.5))
-    decorations.append(Decoration('EASY WINDOW', 10, 1.5))
+    decorations.append(Decoration('EASY WINDOW', 10, 1.3))
+#hall decorations
+    decorations.append(Decoration('BIG CLOCK', 8.2, 8.3))
+    decorations.append(Decoration('PAINT 4', 11.4, 8.4))
+    decorations.append(Decoration('PAINT 5', 13.8, 8.4))
+    decorations.append(Decoration('OPENED AMPHORA', 18.1, 9.6))
+    decorations.append(Decoration('OPENED AMPHORA', 19.1, 9.6))
+    decorations.append(Decoration('OPENED AMPHORA', 20.1, 9.6))
+    decorations.append(Decoration('PAINT 1', 23.8, 8.4))
+    decorations.append(Decoration('PAINT 2', 25.8, 8.4))
+    decorations.append(Decoration('PAINT 3', 27.8, 8.4))
+    decorations.append(Decoration('PAINT 6', 29.8, 8.4))
+
+#3-rd room
     for x in range(20,25):
         for y in range(3,7):
             decorations.append(Decoration('CLOSED AMPHORA', x, y))
