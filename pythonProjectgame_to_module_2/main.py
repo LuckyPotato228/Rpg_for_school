@@ -2,7 +2,7 @@ import pygame
 import sys
 from dataclasses import dataclass
 from datetime import datetime
-
+pygame.init()
 screen_w = 1920
 screen_h = 1080
 menu_w = 256
@@ -19,6 +19,7 @@ y_tiles = screen_h // tile_wh
 
 last_keys = None
 
+music = pygame.mixer.music.load("Sounds/just-relax-11157.mp3")
 stairs_up_image = pygame.image.load('Images/stone_stairs_up.png')
 stairs_down_image = pygame.image.load('Images/stone_stairs_down.png')
 wall_image = pygame.image.load('Images/wood_wall.png')
@@ -242,6 +243,7 @@ def event_by_tile(tile: Tile):
 
 
 def init_scene_second_floor():
+    pygame.mixer.music.play()
     global x_tiles, y_tiles
     global civ_x, civ_y
     x_tiles = 14
